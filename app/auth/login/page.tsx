@@ -1,32 +1,164 @@
-// app/auth/login/page.tsx
-'use client';
-import { signIn } from "next-auth/react";
+"use client"
+
+import Link from "next/link"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
+import { signIn } from "next-auth/react"
+import { toast } from "sonner" // <-- CORRECTED IMPORT
+
+import { Button } from "@/components/ui/button"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+
+// Define the form schema for validation
+const formSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email." }),
+  password: z.string().min(1, { message: "Password is required." }),
+})
 
 export default function LoginPage() {
+  // 1. Define your form.
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  })
+
+  // 2. Define a submit handler for email/password.
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    // This is where you'll call your backend Express API
+    // OR use NextAuth's "credentials" provider
+    console.log("Form values:", values)
+
+    // Example of using NextAuth credentials
+    const result = await signIn("credentials", {
+      redirect: false, // Don't redirect, handle success/error here
+      email: values.email,
+      password: values.password,
+    })
+
+    if (result?.error) {
+      toast.error("Login Failed", { // <-- Use sonner
+        description: "Invalid email or password.",
+      })
+    } else if (result?.ok) {
+      toast.success("Login Successful!", { // <-- Use sonner
+        description: "Redirecting to your dashboard...",
+      })
+      // NextAuth will automatically redirect, or you can push()
+      // window.location.href = "/dashboard";
+    }
+  }
+
+  // 3. Define handlers for OAuth providers
+  const handleOAuthSignIn = (provider: "google" | "linkedin") => {
+    signIn(provider, { callbackUrl: "/dashboard" }) // Redirect to dashboard on success
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-3xl font-bold text-center mb-6 text-blue-700">Welcome to EduHub</h2>
-        <p className="text-center text-gray-600 mb-4">Login to access your dashboard</p>
+    <div className="container flex min-h-[calc(100vh-4rem)] items-center justify-center py-12">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">Welcome Back!</CardTitle>
+          <CardDescription>
+            Sign in to your CampusCrew account.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {/* OAuth Buttons */}
+          <div className="grid grid-cols-2 gap-4">
+            <Button
+              variant="outline"
+              onClick={() => handleOAuthSignIn("google")}
+            >
+              {/* Add Google icon here if you like */}
+              Sign in with Google
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => handleOAuthSignIn("linkedin")}
+            >
+              {/* Add LinkedIn icon here */}
+              Sign in with LinkedIn
+            </Button>
+          </div>
 
-        <button
-          onClick={() => signIn("google")}
-          className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded mb-4 transition"
-        >
-          Sign in with Google
-        </button>
+          <Separator className="my-6">
+            <span className="bg-background px-2 text-xs text-muted-foreground">
+              OR CONTINUE WITH
+            </span>
+          </Separator>
 
-        <button
-          onClick={() => signIn("github")}
-          className="w-full bg-gray-800 hover:bg-gray-900 text-white py-2 px-4 rounded transition"
-        >
-          Sign in with GitHub
-        </button>
+          {/* Email/Password Form */}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="you@example.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
+            </form>
+          </Form>
 
-        <div className="mt-6 text-center text-sm text-gray-500">
-          By signing in, you agree to our <span className="underline">Terms</span> and <span className="underline">Privacy Policy</span>.
-        </div>
-      </div>
+          <div className="mt-6 text-center text-sm">
+            Don't have an account?{" "}
+            <Link href="/register" className="font-semibold text-primary hover:underline">
+              Sign Up
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  );
+  )
 }
+
