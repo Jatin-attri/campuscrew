@@ -18,6 +18,8 @@ import {
   Users,
   BadgeDollarSign,
   Quote,
+  Download,
+  IndianRupee,
 } from 'lucide-react';
 
 export default function Home() {
@@ -34,7 +36,7 @@ export default function Home() {
         </p>
         <div className="mt-8 flex gap-4">
           <Button asChild size="lg">
-            <Link href="/papers">Browse Papers</Link>
+            <Link href="/resources/papers">Browse Papers</Link>
           </Button>
           <Button asChild variant="outline" size="lg">
             <Link href="/marketplace">Visit Marketplace</Link>
@@ -62,7 +64,7 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <Button asChild variant="outline" className="w-full">
-                <Link href="/papers">Explore Hub</Link>
+                <Link href="/resources/papers">Explore Hub</Link>
               </Button>
             </CardContent>
           </Card>
@@ -125,32 +127,35 @@ export default function Home() {
                 skilled student in the marketplace.
               </p>
             </div>
-           {/* Step 2 */}
-<div className="flex flex-col items-center text-center">
-    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-        {/*  */}
-    </div>
-    <h3 className="mb-2 text-xl font-bold">Download or Connect</h3>
-    {/* Line 135 */}
-    <p className="text-muted-foreground">
-        Download notes directly or connect with another student to get
-        help with your specific assignment.
-    </p> 
-</div> {/* This closes the Step 2 div */}
+            {/* Step 2 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                {/*  */}
+                <Download className="h-8 w-8"></Download>
+
+              </div>
+              <h3 className="mb-2 text-xl font-bold">Download or Connect</h3>
+              {/* Line 135 */}
+              <p className="text-muted-foreground">
+                Download notes directly or connect with another student to get
+                help with your specific assignment.
+              </p>
+            </div> {/* This closes the Step 2 div */}
 
 
-{/* Step 3 */}
-<div className="flex flex-col items-center text-center">
-    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-        {/*  */}
-    </div>
-    {/* ... code after ... */}
+            {/* Step 3 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                {/*  */}
+                <IndianRupee className="h-8 w-8"></IndianRupee>
+              </div>
+              {/* ... code after ... */}
               <h3 className="mb-2 text-xl font-semibold">3. Pay Securely</h3>
               <p className="text-muted-foreground">
                 For marketplace services, pay securely through our platform.
                 Payment is held until you approve the work.
-                </p>
-            
+              </p>
+
             </div>
           </div>
         </div>
@@ -176,20 +181,20 @@ export default function Home() {
                 <AvatarFallback>S1</AvatarFallback>
               </Avatar>
               <div>
-                <CardTitle className="text-lg">Priya Sharma</CardTitle>
-                <CardDescription>B.Tech, 3rd Year</CardDescription>
+                <CardTitle className="text-lg">Jatin Attri</CardTitle>
+                <CardDescription>MCA, 1st Year</CardDescription>
               </div>
             </CardHeader>
           </Card>
-          
+
           <Card className="flex flex-col">
             <CardContent className="flex-grow pt-6">
               <Quote className="mb-4 h-8 w-8 text-primary" />
               <p className="italic text-muted-foreground">
                 "I used the marketplace to get help with my final year
                 project presentation. The provider was amazing and I got an A!"
-                </p>
-          
+              </p>
+
             </CardContent>
             <CardHeader className="flex-row items-center gap-4">
               <Avatar>
@@ -202,7 +207,7 @@ export default function Home() {
               </div>
             </CardHeader>
           </Card>
-          
+
           <Card className="flex flex-col">
             <CardContent className="flex-grow pt-6">
               <Quote className="mb-4 h-8 w-8 text-primary" />
@@ -217,7 +222,7 @@ export default function Home() {
                 <AvatarFallback>A3</AvatarFallback>
               </Avatar>
               <div>
-                <CardTitle className="text-lg">Aisha Khan</CardTitle>
+                <CardTitle className="text-lg">Sahil Sharma</CardTitle>
                 <CardDescription>BBA, 2nd Year</CardDescription>
               </div>
             </CardHeader>
@@ -232,7 +237,7 @@ export default function Home() {
           Create an account today to access all features.
         </p> {/* <-- Fixed line! */}
         <Button asChild variant="secondary" size="lg" className="mt-8">
-          <Link href="/register">Sign Up for Free</Link>
+          <Link href="/auth/register">Sign Up for Free</Link>
         </Button>
       </section>
     </div>

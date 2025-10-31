@@ -1,10 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, User, LogOut, LogIn, MessageSquare, Briefcase, BookOpen } from 'lucide-react';
+import { Menu, X, User, LogOut, LogIn, MessageSquare, Briefcase, BookOpen, Link } from 'lucide-react';
 
 // Custom Link component using a standard anchor tag <a> for compatibility
-const NavLink = ({ href, children, className, onClick }) => (
+type NavLinkProps = {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+};
+
+const NavLink: React.FC<NavLinkProps> = ({ href, children, className, onClick }) => (
   <a href={href} className={className} onClick={onClick}>
     {children}
   </a>
@@ -13,33 +20,33 @@ const NavLink = ({ href, children, className, onClick }) => (
 // --- MOCK AUTHENTICATION SYSTEM ---
 // In a real application, you would replace this with actual NextAuth imports (useSession, signIn, signOut).
 
-const INITIAL_MOCK_USER = { 
-    name: "A. Student", 
-    email: "a.student@campuscrew.edu" 
+const INITIAL_MOCK_USER = {
+  name: "A. Student",
+  email: "a.student@campuscrew.edu"
 };
 
 const useMockSession = () => {
   // Start with an authenticated user for easy demonstration of the UserDropdown UI
-  const [user, setUser] = useState(INITIAL_MOCK_USER); 
-  
+  const [user, setUser] = useState<{ name: string; email: string } | null>(INITIAL_MOCK_USER);
+
   // No need for useEffect timeout since we start authenticated
-  
-  return { 
-    data: user ? { user } : null, 
-    status: user ? 'authenticated' : 'unauthenticated', 
+
+  return {
+    data: user ? { user } : null,
+    status: user ? 'authenticated' : 'unauthenticated',
     user,
     setUser
   };
 };
 
-const mockSignIn = (provider) => {
-    console.log(`Simulating sign in with ${provider}...`);
-    // After a successful login via Google/LinkedIn, return the user object
-    return INITIAL_MOCK_USER; 
+const mockSignIn = (provider: string) => {
+  console.log(`Simulating sign in with ${provider}...`);
+  // After a successful login via Google/LinkedIn, return the user object
+  return INITIAL_MOCK_USER;
 };
 
 const mockSignOut = () => {
-    console.log("Simulating sign out...");
+  console.log("Simulating sign out...");
 };
 // --- END MOCK AUTHENTICATION SYSTEM ---
 
@@ -56,18 +63,18 @@ export default function Navbar() {
   const { user, setUser } = useMockSession(); // Using the mock hook
 
   // Simulate full sign in/out logic
-  const handleSignIn = async (provider) => {
-      const newUser = mockSignIn(provider);
-      if (newUser) {
-          setUser(newUser);
-          setIsMenuOpen(false);
-      }
+  const handleSignIn = async (provider: string) => {
+    const newUser = mockSignIn(provider);
+    if (newUser) {
+      setUser(newUser);
+      setIsMenuOpen(false);
+    }
   };
 
   const handleSignOut = () => {
-      mockSignOut();
-      setUser(null);
-      setIsMenuOpen(false);
+    mockSignOut();
+    setUser(null);
+    setIsMenuOpen(false);
   };
 
   const menuClass = "transition-all duration-300 ease-in-out";
@@ -88,16 +95,16 @@ export default function Navbar() {
                 {item.label}
               </NavLink>
             ))}
-            
+
             {/* Conditional Auth Button (Desktop) */}
             {!user ? (
-              <button 
+              <button
                 // In a real app, this is where you'd call signIn('google') 
-                onClick={() => handleSignIn('Google')} 
+                onClick={() => handleSignIn('Google')}
                 className="ml-4 flex items-center px-4 py-2 bg-indigo-600 rounded-full text-white font-bold text-sm shadow-lg hover:bg-indigo-500 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-400"
               >
                 <LogIn className="w-4 h-4 mr-2" />
-                Sign In / Register
+                <Link href='/auth/register'></Link> Sign In / Register
               </button>
             ) : (
               // Display User Dropdown when authenticated
@@ -120,27 +127,26 @@ export default function Navbar() {
 
       {/* Mobile Menu (Sliding Panel) */}
       <div
-        className={`fixed inset-0 z-40 bg-slate-900/95 backdrop-blur-sm md:hidden ${
-          isMenuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
-        } ${menuClass}`}
+        className={`fixed inset-0 z-40 bg-slate-900/95 backdrop-blur-sm md:hidden ${isMenuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0 pointer-events-none"
+          } ${menuClass}`}
       >
         <div className="pt-16 px-4 pb-3 space-y-2 border-t border-slate-700">
           {NavItems.map((item) => (
-            <NavLink key={item.href} href={item.href} 
+            <NavLink key={item.href} href={item.href}
               onClick={() => setIsMenuOpen(false)}
               className="flex items-center space-x-3 w-full px-3 py-3 rounded-lg text-base font-medium text-slate-200 hover:bg-slate-800 hover:text-indigo-400 transition duration-150"
             >
-                <item.icon className="w-5 h-5" />
-                <span>{item.label}</span>
+              <item.icon className="w-5 h-5" />
+              <span>{item.label}</span>
             </NavLink>
           ))}
-          
+
           <hr className="border-slate-800 my-2" />
 
           {/* Mobile Auth Button/Profile */}
           {!user ? (
-            <button 
-              onClick={() => handleSignIn('Google')} 
+            <button
+              onClick={() => handleSignIn('Google')}
               className="mt-4 flex items-center space-x-3 w-full px-3 py-3 rounded-lg text-base font-bold bg-indigo-600 text-white hover:bg-indigo-500 transition duration-200"
             >
               <LogIn className="w-5 h-5" />
@@ -148,25 +154,25 @@ export default function Navbar() {
             </button>
           ) : (
             <>
-                {/* Mobile Profile Card */}
-                <div className="flex items-center space-x-3 px-3 py-3 bg-slate-800/50 rounded-lg">
-                    <div className="relative">
-                        <User className="h-8 w-8 rounded-full bg-indigo-600 p-1 text-white" />
-                        <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-400 border border-slate-900"></span>
-                    </div>
-                    <div className="flex flex-col text-left">
-                        <span className="font-semibold text-white">{user.name}</span>
-                        <span className="text-xs text-slate-400">{user.email}</span>
-                    </div>
+              {/* Mobile Profile Card */}
+              <div className="flex items-center space-x-3 px-3 py-3 bg-slate-800/50 rounded-lg">
+                <div className="relative">
+                  <User className="h-8 w-8 rounded-full bg-indigo-600 p-1 text-white" />
+                  <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-400 border border-slate-900"></span>
                 </div>
-                {/* Mobile Sign Out Button */}
-                <button 
-                    onClick={handleSignOut} 
-                    className="flex items-center space-x-3 w-full px-3 py-3 rounded-lg text-base font-medium text-red-400 hover:bg-slate-800 transition duration-150"
-                >
-                    <LogOut className="w-5 h-5" />
-                    <span>Sign Out</span>
-                </button>
+                <div className="flex flex-col text-left">
+                  <span className="font-semibold text-white">{user.name}</span>
+                  <span className="text-xs text-slate-400">{user.email}</span>
+                </div>
+              </div>
+              {/* Mobile Sign Out Button */}
+              <button
+                onClick={handleSignOut}
+                className="flex items-center space-x-3 w-full px-3 py-3 rounded-lg text-base font-medium text-red-400 hover:bg-slate-800 transition duration-150"
+              >
+                <LogOut className="w-5 h-5" />
+                <span>Sign Out</span>
+              </button>
             </>
           )}
         </div>
@@ -176,7 +182,7 @@ export default function Navbar() {
 }
 
 // User Profile Dropdown Component for Desktop
-function UserDropdown({ user, handleSignOut }) {
+function UserDropdown({ user, handleSignOut }: { user: { name: string; email: string }; handleSignOut: () => void }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -186,9 +192,9 @@ function UserDropdown({ user, handleSignOut }) {
         className="flex items-center space-x-2 p-1 rounded-full hover:bg-slate-800 transition duration-150 focus:outline-none"
       >
         <div className="relative">
-            {/* Placeholder for Profile Image */}
-            <User className="h-8 w-8 rounded-full bg-indigo-600 p-1 text-white" /> 
-            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-400 border-2 border-slate-900"></span>
+          {/* Placeholder for Profile Image */}
+          <User className="h-8 w-8 rounded-full bg-indigo-600 p-1 text-white" />
+          <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-400 border-2 border-slate-900"></span>
         </div>
         {/* Shows user name on larger screens */}
         <span className="hidden lg:inline text-sm font-medium text-slate-200">{user.name}</span>
@@ -196,30 +202,30 @@ function UserDropdown({ user, handleSignOut }) {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div 
-            onMouseLeave={() => setIsOpen(false)}
-            className="absolute right-0 mt-3 w-56 rounded-xl shadow-2xl bg-slate-700 ring-1 ring-black ring-opacity-5 z-50 transform transition-opacity duration-150 origin-top-right"
+        <div
+          onMouseLeave={() => setIsOpen(false)}
+          className="absolute right-0 mt-3 w-56 rounded-xl shadow-2xl bg-slate-700 ring-1 ring-black ring-opacity-5 z-50 transform transition-opacity duration-150 origin-top-right"
         >
           <div className="py-1">
             <div className="px-4 py-2 text-sm text-white border-b border-slate-600">
-                <p className="font-bold">{user.name}</p>
-                <p className="text-xs text-slate-400 truncate">{user.email}</p>
+              <p className="font-bold">{user.name}</p>
+              <p className="text-xs text-slate-400 truncate">{user.email}</p>
             </div>
-            
-            <NavLink 
-                href="/profile" 
-                onClick={() => setIsOpen(false)}
-                className="flex items-center px-4 py-2 text-sm text-slate-200 hover:bg-slate-600"
+
+            <NavLink
+              href="/profile"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center px-4 py-2 text-sm text-slate-200 hover:bg-slate-600"
             >
-                <User className="w-4 h-4 mr-3" />
-                Profile Settings
+              <User className="w-4 h-4 mr-3" />
+              Profile Settings
             </NavLink>
 
             <button
               onClick={handleSignOut}
               className="flex items-center w-full text-left px-4 py-2 text-sm text-red-300 hover:bg-slate-600 border-t border-slate-600"
             >
-                <LogOut className="w-4 h-4 mr-3" />
+              <LogOut className="w-4 h-4 mr-3" />
               Sign Out
             </button>
           </div>

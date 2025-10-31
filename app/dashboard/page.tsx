@@ -68,7 +68,7 @@ export default function DashboardPage() {
 
   // TODO: Get user role from your database and pass it to the session
   // For now, we'll mock a role. Change "student" to "provider" to see the other tab.
-  const userRole = session?.user?.role || "student" // MOCK: "student" | "provider" | "admin"
+  const userRole = (session?.user as any)?.role || "student" // MOCK: "student" | "provider" | "admin"
 
   return (
     <SessionProvider>
@@ -200,74 +200,74 @@ export default function DashboardPage() {
           </TabsContent>
         </Tabs>
       </div>
-      </SessionProvider>
-      )
+    </SessionProvider>
+  )
 }
 
-      // --- Reusable Data Table Component ---
-      function DataTable({data, type}: {data: any[]; type: "student" | "provider" }) {
+// --- Reusable Data Table Component ---
+function DataTable({ data, type }: { data: any[]; type: "student" | "provider" }) {
   const headers = type === "student"
-      ? ["Request ID", "Topic", "Status", "Actions"]
-      : ["Job ID", "Topic", "Budget", "Actions"]
+    ? ["Request ID", "Topic", "Status", "Actions"]
+    : ["Job ID", "Topic", "Budget", "Actions"]
 
-      return (
-      <Table>
-        <TableHeader>
-          <TableRow>
-            {headers.map((header) => (
-              <TableHead key={header}>{header}</TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell className="font-medium">{item.id}</TableCell>
-              <TableCell>{item.topic}</TableCell>
-              <TableCell>
-                {type === "student" ? (
-                  <Badge variant={item.status === "Completed" ? "default" : "secondary"}>
-                    {item.status}
-                  </Badge>
-                ) : (
-                  item.budget
-                )}
-              </TableCell>
-              <TableCell>
-                <Button variant="outline" size="sm">
-                  View
-                </Button>
-              </TableCell>
-            </TableRow>
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          {headers.map((header) => (
+            <TableHead key={header}>{header}</TableHead>
           ))}
-        </TableBody>
-      </Table>
-      )
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data.map((item) => (
+          <TableRow key={item.id}>
+            <TableCell className="font-medium">{item.id}</TableCell>
+            <TableCell>{item.topic}</TableCell>
+            <TableCell>
+              {type === "student" ? (
+                <Badge variant={item.status === "Completed" ? "default" : "secondary"}>
+                  {item.status}
+                </Badge>
+              ) : (
+                item.budget
+              )}
+            </TableCell>
+            <TableCell>
+              <Button variant="outline" size="sm">
+                View
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  )
 }
 
-      // --- Reusable Loading Skeleton Component ---
-      function DashboardLoadingSkeleton() {
+// --- Reusable Loading Skeleton Component ---
+function DashboardLoadingSkeleton() {
   return (
-      <div className="container mx-auto py-10">
-        <div className="mb-6 flex items-center gap-4">
-          <Skeleton className="h-16 w-16 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-48" />
-            <Skeleton className="h-6 w-32" />
-          </div>
+    <div className="container mx-auto py-10">
+      <div className="mb-6 flex items-center gap-4">
+        <Skeleton className="h-16 w-16 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-6 w-32" />
         </div>
-        <Skeleton className="h-10 w-64" /> {/* TabsList Skeleton */}
-        <Card className="mt-4">
-          <CardHeader>
-            <Skeleton className="h-7 w-1/3" />
-            <Skeleton className="h-5 w-1/2" />
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-          </CardContent>
-        </Card>
       </div>
-      )
+      <Skeleton className="h-10 w-64" /> {/* TabsList Skeleton */}
+      <Card className="mt-4">
+        <CardHeader>
+          <Skeleton className="h-7 w-1/3" />
+          <Skeleton className="h-5 w-1/2" />
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+        </CardContent>
+      </Card>
+    </div>
+  )
 }
