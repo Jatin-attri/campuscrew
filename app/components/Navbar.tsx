@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, User, LogOut, LogIn, MessageSquare, Briefcase, BookOpen, Link } from 'lucide-react';
+import { Menu, X, User, LogOut, LogIn, MessageSquare, Briefcase, BookOpen, Link, } from 'lucide-react';
 
 // Custom Link component using a standard anchor tag <a> for compatibility
 type NavLinkProps = {
@@ -83,8 +83,9 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 bg-slate-900 shadow-xl border-b border-slate-800 text-white font-inter">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo/Brand */}
-          <NavLink href="/" className="text-2xl font-extrabold text-indigo-400 tracking-wider">
+
+          <NavLink href="/" className="text-2xl font-extrabold text-white tracking-wider flex">
+            <BookOpen className=" text-white w-6 h-6 m-2" />
             CampusCrew
           </NavLink>
 
