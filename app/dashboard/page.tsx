@@ -1,8 +1,8 @@
 "use client"
-import { SessionProvider } from "next-auth/react"
+
 import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation" // Use next/navigation in App Router
-import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 import {
   Card,
   CardContent,
@@ -10,12 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -24,224 +19,314 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Separator } from "@/components/ui/separator"
+import {
+  Download,
+  FileText,
+  DollarSign,
+  Briefcase,
+  PlusCircle,
+  Bell,
+  Settings,
+  Star,
+} from "lucide-react"
 
-// --- Mock Data (Replace with your API data later) ---
-const mockStudentRequests = [
-  { id: "REQ-001", topic: "Java Spring Boot API", status: "In Progress" },
-  { id: "REQ-002", topic: "React State Management", status: "Completed" },
-  { id: "REQ-003", topic: "Python Data Analysis", status: "Pending" },
+// --- Mock Data ---
+// In a real app, you'd fetch this data from your API
+const statsData = [
+  {
+    title: "Downloads",
+    value: "12",
+    icon: <Download className="h-4 w-4 text-muted-foreground" />,
+    description: "Papers & notes you've downloaded",
+  },
+  {
+    title: "Requests Posted",
+    value: "3",
+    icon: <FileText className="h-4 w-4 text-muted-foreground" />,
+    description: "Jobs you've posted in the marketplace",
+  },
+  {
+    title: "Gigs Completed",
+    value: "2",
+    icon: <Briefcase className="h-4 w-4 text-muted-foreground" />,
+    description: "Jobs you've completed as a provider",
+  },
+  {
+    title: "Total Earnings",
+    value: "₹1,200",
+    icon: <DollarSign className="h-4 w-4 text-muted-foreground" />,
+    description: "From your completed gigs",
+  },
 ]
 
-const mockProviderJobs = [
-  { id: "JOB-001", topic: "Urgent Python Script", budget: "$50" },
-  { id: "JOB-002", topic: "React Component Library", budget: "$200" },
+const myRequests = [
+  {
+    id: "REQ-001",
+    title: "Java OOP Project Report",
+    status: "In Progress",
+    provider: "Priya S.",
+    dueDate: "Nov 10, 2025",
+  },
+  {
+    id: "REQ-002",
+    title: "Calculus II Problem Set",
+    status: "Pending Bids",
+    provider: "N/A",
+    dueDate: "Nov 15, 2025",
+  },
+  {
+    id: "REQ-003",
+    title: "Marketing PPT Design",
+    status: "Completed",
+    provider: "Rohan G.",
+    dueDate: "Nov 01, 2025",
+  },
+]
+
+const myGigs = [
+  {
+    id: "GIG-001",
+    title: "Data Structures Assignment",
+    status: "Completed",
+    client: "Aisha K.",
+    dueDate: "Oct 28, 2025",
+  },
+  {
+    id: "GIG-002",
+    title: "Web Dev Final Project Help",
+    status: "Awaiting Approval",
+    client: "Mikey C.",
+    dueDate: "Nov 03, 2025",
+  },
+]
+
+const recentActivity = [
+  {
+    id: "ACT-001",
+    icon: <Star className="h-4 w-4 text-yellow-500" />,
+    text: "You received a 5-star review from Aisha K.",
+    time: "2h ago",
+  },
+  {
+    id: "ACT-002",
+    icon: <DollarSign className="h-4 w-4 text-green-500" />,
+    text: "Rohan G. submitted 'Marketing PPT Design'.",
+    time: "1d ago",
+  },
+  {
+    id: "ACT-003",
+    icon: <FileText className="h-4 w-4 text-primary" />,
+    text: "New papers for 'Data Structures' were added.",
+    time: "2d ago",
+  },
 ]
 // --- End Mock Data ---
 
+// --- Helper to get status badge variant ---
+const getStatusVariant = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "in progress":
+    case "awaiting approval":
+      return "secondary"
+    case "pending bids":
+      return "outline"
+    case "completed":
+      return "default"
+    default:
+      return "default"
+  }
+}
 
 export default function DashboardPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
 
-  // This effect handles authentication status
-  useEffect(() => {
-    if (status === "loading") {
-      return // Don't do anything while loading
-    }
-    if (status === "unauthenticated") {
-      router.push("/login") // Redirect to login if not authenticated
-    }
-  }, [status, router])
-
-  // --- 1. Loading State ---
-  // Show a skeleton UI while session is being fetched
+  // --- 1. Security & Loading State ---
   if (status === "loading") {
     return <DashboardLoadingSkeleton />
   }
 
-  // --- 2. Authenticated State ---
-  // We assume the user is authenticated if we reach this point
+  if (status === "unauthenticated") {
+    router.push("/login")
+    return null // Render nothing while redirecting
+  }
 
-  // TODO: Get user role from your database and pass it to the session
-  // For now, we'll mock a role. Change "student" to "provider" to see the other tab.
-  const userRole = (session?.user as any)?.role || "student" // MOCK: "student" | "provider" | "admin"
-
+  // --- 2. Main Dashboard Render ---
   return (
-    <SessionProvider>
-      <div className="container mx-auto py-10">
-        <div className="mb-6 flex items-center gap-4">
-          <Avatar className="h-16 w-16">
-            <AvatarImage src={session?.user?.image || ""} />
-            <AvatarFallback>
-              {session?.user?.name?.charAt(0).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <h1 className="text-3xl font-bold">
-              Welcome, {session?.user?.name}!
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Here's your overview as a {userRole}.
-            </p>
-          </div>
+    <div className="container mx-auto py-10">
+      {/* --- Page Header --- */}
+      <div className="mb-8 space-y-1">
+        <h1 className="text-3xl font-bold tracking-tight">
+          Welcome back, {session?.user?.name?.split(" ")[0] || "Student"}!
+        </h1>
+        <p className="text-muted-foreground">
+          Here's your CampusCrew update for Tuesday, November 4, 2025.
+        </p>
+      </div>
+
+      {/* --- Main Grid Layout --- */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+        {/* --- Top Stat Cards (Span full width on mobile) --- */}
+        {statsData.map((stat) => (
+          <Card key={stat.title}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {stat.title}
+              </CardTitle>
+              {stat.icon}
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stat.value}</div>
+              <p className="text-xs text-muted-foreground">
+                {stat.description}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
+
+        {/* --- Main Content Area (2/3 width on desktop) --- */}
+        <div className="lg:col-span-3">
+          <Tabs defaultValue="myRequests" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="myRequests">
+                My Marketplace Requests
+              </TabsTrigger>
+              <TabsTrigger value="myGigs">My Provider Gigs</TabsTrigger>
+            </TabsList>
+
+            {/* My Requests Tab */}
+            <TabsContent value="myRequests" className="mt-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>My Requests</CardTitle>
+                  <CardDescription>
+                    Jobs you have posted in the marketplace.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Title</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Provider</TableHead>
+                        <TableHead>Due Date</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {myRequests.map((req) => (
+                        <TableRow key={req.id}>
+                          <TableCell className="font-medium">{req.title}</TableCell>
+                          <TableCell>
+                            <Badge variant={getStatusVariant(req.status)}>
+                              {req.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{req.provider}</TableCell>
+                          <TableCell>{req.dueDate}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* My Gigs Tab */}
+            <TabsContent value="myGigs" className="mt-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>My Gigs</CardTitle>
+                  <CardDescription>
+                    Jobs you are currently working on as a provider.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Title</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Client</TableHead>
+                        <TableHead>Due Date</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {myGigs.map((gig) => (
+                        <TableRow key={gig.id}>
+                          <TableCell className="font-medium">{gig.title}</TableCell>
+                          <TableCell>
+                            <Badge variant={getStatusVariant(gig.status)}>
+                              {gig.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{gig.client}</TableCell>
+                          <TableCell>{gig.dueDate}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
 
-        {/* --- Main Dashboard Content --- */}
-        <Tabs defaultValue={userRole === "student" ? "my-requests" : "available-jobs"}>
-          <TabsList>
-            {/* Show different tabs based on role */}
-            {userRole === "student" && (
-              <>
-                <TabsTrigger value="my-requests">My Requests</TabsTrigger>
-                <TabsTrigger value="my-files">My Files</TabsTrigger>
-              </>
-            )}
-            {userRole === "provider" && (
-              <>
-                <TabsTrigger value="available-jobs">Available Jobs</TabsTrigger>
-                <TabsTrigger value="my-services">My Services</TabsTrigger>
-              </>
-            )}
-            {userRole === "admin" && (
-              <>
-                <TabsTrigger value="manage-users">Manage Users</TabsTrigger>
-                <TabsTrigger value="manage-content">Manage Content</TabsTrigger>
-              </>
-            )}
-          </TabsList>
-
-          {/* --- Student Tabs --- */}
-          <TabsContent value="my-requests" className="mt-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle>My Assignment Requests</CardTitle>
-                  <CardDescription>
-                    Track the status of all your requests.
-                  </CardDescription>
-                </div>
-                <Button>Post a New Request</Button>
-              </CardHeader>
-              <CardContent>
-                <DataTable data={mockStudentRequests} type="student" />
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="my-files">
-            <Card>
-              <CardHeader>
-                <CardTitle>My Files</CardTitle>
-                <CardDescription>
-                  Your uploaded and purchased files.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>You haven't uploaded or purchased any files yet.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* --- Provider Tabs --- */}
-          <TabsContent value="available-jobs" className="mt-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Available Jobs</CardTitle>
-                <CardDescription>
-                  Browse and accept jobs from other students.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <DataTable data={mockProviderJobs} type="provider" />
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="my-services">
-            <Card>
-              <CardHeader>
-                <CardTitle>My Services</CardTitle>
-                <CardDescription>
-                  Manage the services you offer.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>You haven't listed any services yet.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* --- Admin Tabs --- */}
-          <TabsContent value="manage-users">
-            <Card>
-              <CardHeader>
-                <CardTitle>Manage Users</CardTitle>
-                <CardDescription>Approve or remove users.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>Admin user management table goes here.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="manage-content">
-            <Card>
-              <CardHeader>
-                <CardTitle>Manage Content</CardTitle>
-                <CardDescription>
-                  Approve new papers, notes, and services.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>Admin content management table goes here.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </SessionProvider>
-  )
-}
-
-// --- Reusable Data Table Component ---
-function DataTable({ data, type }: { data: any[]; type: "student" | "provider" }) {
-  const headers = type === "student"
-    ? ["Request ID", "Topic", "Status", "Actions"]
-    : ["Job ID", "Topic", "Budget", "Actions"]
-
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          {headers.map((header) => (
-            <TableHead key={header}>{header}</TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {data.map((item) => (
-          <TableRow key={item.id}>
-            <TableCell className="font-medium">{item.id}</TableCell>
-            <TableCell>{item.topic}</TableCell>
-            <TableCell>
-              {type === "student" ? (
-                <Badge variant={item.status === "Completed" ? "default" : "secondary"}>
-                  {item.status}
-                </Badge>
-              ) : (
-                item.budget
-              )}
-            </TableCell>
-            <TableCell>
-              <Button variant="outline" size="sm">
-                View
+        {/* --- Sidebar (1/3 width on desktop) --- */}
+        <aside className="space-y-6 lg:col-span-1">
+          {/* Quick Actions Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button asChild size="lg" className="w-full">
+                <Link href="/marketplace/new">
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Post a New Request
+                </Link>
               </Button>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+              <Button asChild variant="outline" className="w-full">
+                <Link href="/papers">
+                  <Download className="mr-2 h-4 w-4" />
+                  Browse Papers
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Recent Activity Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {recentActivity.map((activity, index) => (
+                <div key={activity.id}>
+                  <div className="flex items-start gap-3">
+                    <Avatar className="h-8 w-8 border">
+                      <AvatarFallback>{activity.icon}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <p className="text-sm">{activity.text}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {activity.time}
+                      </p>
+                    </div>
+                  </div>
+                  {index < recentActivity.length - 1 && <Separator className="mt-4" />}
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </aside>
+      </div>
+    </div>
   )
 }
 
@@ -249,25 +334,39 @@ function DataTable({ data, type }: { data: any[]; type: "student" | "provider" }
 function DashboardLoadingSkeleton() {
   return (
     <div className="container mx-auto py-10">
-      <div className="mb-6 flex items-center gap-4">
-        <Skeleton className="h-16 w-16 rounded-full" />
-        <div className="space-y-2">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-6 w-32" />
-        </div>
+      {/* Header Skeleton */}
+      <div className="mb-8 space-y-2">
+        <Skeleton className="h-9 w-1/3" />
+        <Skeleton className="h-5 w-1/2" />
       </div>
-      <Skeleton className="h-10 w-64" /> {/* TabsList Skeleton */}
-      <Card className="mt-4">
-        <CardHeader>
-          <Skeleton className="h-7 w-1/3" />
-          <Skeleton className="h-5 w-1/2" />
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-        </CardContent>
-      </Card>
+
+      {/* Main Grid Skeleton */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+        {/* Stats Skeletons */}
+        <Skeleton className="h-[120px] w-full" />
+        <Skeleton className="h-[120px] w-full" />
+        <Skeleton className="h-[120px] w-full" />
+        <Skeleton className="h-[120px] w-full" />
+
+        {/* Main Content Skeleton */}
+        <div className="lg:col-span-3">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-1/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-48 w-full" />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Sidebar Skeleton */}
+        <aside className="space-y-6 lg:col-span-1">
+          <Skeleton className="h-48 w-full" />
+          <Skeleton className="h-64 w-full" />
+        </aside>
+      </div>
     </div>
   )
 }

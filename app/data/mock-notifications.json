@@ -1,0 +1,37 @@
+[
+  {
+    "id": "notif-001",
+    "type": "marketplace",
+    "text": "You have a new bid on 'Java OOP Project Report' from Rohan G.",
+    "time": "5m ago",
+    "isRead": false
+  },
+  {
+    "id": "notif-002",
+    "type": "content",
+    "text": "A new paper for 'Data Structures' has been uploaded by an Admin.",
+    "time": "1h ago",
+    "isRead": false
+  },
+  {
+    "id": "notif-003",
+    "type": "marketplace",
+    "text": "Your work for 'Marketing PPT Design' has been approved by the client.",
+    "time": "4h ago",
+    "isRead": true
+  },
+  {
+    "id": "notif-004",
+    "type": "account",
+    "text": "Your profile information was successfully updated.",
+    "time": "1d ago",
+    "isRead": true
+  },
+  {
+    "id": "notif-005",
+    "type":"content",
+    "text": "New notes for 'Calculus II' are available.",
+    "time": "2d ago",
+    "isRead": true
+  }
+]

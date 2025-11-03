@@ -1,0 +1,62 @@
+[
+  {
+    "id": "n-001",
+    "title": "Complete Java OOP Concepts",
+    "description": "Handwritten notes covering all OOP principles: Encapsulation, Inheritance, Polymorphism...",
+    "subject": "Programming",
+    "year": 2,
+    "uploader": "Priya Sharma",
+    "uploaderAvatar": "https://placehold.co/40x40/E2E8F0/475569?text=PS",
+    "fileUrl": "#"
+  },
+  {
+    "id": "n-002",
+    "title": "Network Models: OSI & TCP/IP",
+    "description": "Detailed breakdown of all 7 layers of the OSI model and comparison with TCP/IP.",
+    "subject": "Networking",
+    "year": 3,
+    "uploader": "Rohan Gupta",
+    "uploaderAvatar": "https://placehold.co/40x40/E2E8F0/475569?text=RG",
+    "fileUrl": "#"
+  },
+  {
+    "id": "n-003",
+    "title": "Big O Notation Summary",
+    "description": "A 2-page cheat sheet for all common time and space complexities. Perfect for interviews.",
+    "subject": "Data Structures",
+    "year": 2,
+    "uploader": "Aisha Khan",
+    "uploaderAvatar": "https://placehold.co/40x40/E2E8F0/475569?text=AK",
+    "fileUrl": "#"
+  },
+  {
+    "id": "n-004",
+    "title": "Calculus II: Integration Formulas",
+    "description": "All essential integration formulas and examples from Calculus II.",
+    "subject": "Mathematics",
+    "year": 1,
+    "uploader": "Priya Sharma",
+    "uploaderAvatar": "https://placehold.co/40x40/E2E8F0/475569?text=PS",
+    "fileUrl": "#"
+  },
+  {
+    "id": "n-005",
+    "title": "SQL Join Types Explained",
+    "description": "Visual guide (with Venn diagrams) to INNER, LEFT, RIGHT, and FULL OUTER joins.",
+    "subject": "Databases",
+    "year": 3,
+    "uploader": "Mikey Chen",
+    "uploaderAvatar": "https://placehold.co/40x40/E2E8F0/475569?text=MC",
+    "fileUrl": "#"
+  },
+  {
+    "id": "n-006",
+    "title": "Intro to Python for DS",
+    "description": "Lecture 1 notes covering basic Python syntax, lists, and dictionaries for data science.",
+    "subject": "Programming",
+    "year": 2,
+    "uploader": "Aisha Khan",
+    "uploaderAvatar": "https://placehold.co/40x40/E2E8F0/475569?text=AK",
+    "fileUrl": "#"
+  }
+]
