@@ -8,7 +8,13 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
+import { WavyBackground } from "@/components/ui/wavy-background";
+import { DottedGlowBackground } from '@/components/ui/dotted-glow-background';
+import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
+import { TypewriterEffect } from '@/components/ui/typewriter-effect';
+import { CometCard } from "@/components/ui/comet-card";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import { ContainerTextFlip } from "@/components/ui/container-text-flip";
 // Import icons from lucide-react
 import {
   BookMarked,
@@ -23,14 +29,55 @@ import {
 } from 'lucide-react';
 
 export default function Home() {
+  const words = [
+    {
+      text: "Create",
+      className: "text-pink-500 dark:text-pink-400",
+    },
+    {
+      text: "an",
+      className: "text-yellow-500 dark:text-yellow-400",
+    },
+    {
+      text: "account",
+      className: "text-purple-500 dark:text-purple-400",
+    },
+  
+    {
+      text: "today",
+      className: "text-red-500 dark:text-red-400",
+    },
+    {
+      text: "to",
+      className: "text-orange-500 dark:text-orange-400",
+    },
+    {
+      text: "access",
+      className: "text-indigo-500 dark:text-indigo-400",
+    },
+    {
+      text: "all",
+      className: "text-green-500 dark:text-green-400",
+    },
+    {
+      text: "features.",
+      className: "text-blue-500 dark:text-blue-500",
+    },
+  ];
   return (
     <div className="container mx-auto">
       {/* --- Hero Section --- */}
+      <WavyBackground className="  ">
       <section className="flex flex-col items-center py-20 text-center md:py-32">
-        <h1 className="text-4xl font-bold tracking-tight md:text-6xl">
-          Welcome to <span className="text-primary">CampusCrew</span>
+        <h1 className="text-4xl font-bold tracking-tight md:text-6xl text-white">
+          Welcome to  
+             {/* <span className=" text-pink-500"> CampusCrew</span> */}
+          <span className=''><LayoutTextFlip
+          text=" "
+          words={["CampusCrew", "TheNoteNest", "CampusLink", "ScholarHub", "EduConnect", "UniMate"]}
+        /></span> 
         </h1>
-        <p className="mt-4 max-w-2xl text-lg text-muted-foreground md:text-xl">
+        <p className="mt-4 max-w-2xl text-lg text-muted-foreground md:text-xl text-white">
           Your one-stop platform for question papers, notes, and peer-to-peer
           academic services.
         </p>
@@ -42,16 +89,23 @@ export default function Home() {
             <Link href="/marketplace">Visit Marketplace</Link>
           </Button>
         </div>
-      </section>
+      </section></WavyBackground>
 
       {/* --- Core Features Section --- */}
-      <section className="py-16">
+   
+      <section className="py-16 ">
         <h2 className="mb-12 text-center text-3xl font-bold">
-          Core Features
+          {/* Core Features */}
+          <ContainerTextFlip
+      words={["Core Features", "Main Tools", "Why Choose Us", "Product Pillars"]}
+    />
         </h2>
+        
         <div className="grid gap-6 md:grid-cols-3">
           {/* Feature 1: Content Hub */}
+          <CometCard>
           <Card>
+            
             <CardHeader>
               <div className="flex items-center gap-4">
                 <BookMarked className="h-10 w-10 text-primary" />
@@ -63,13 +117,15 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button asChild variant="outline" className="w-full">
+              
+              <Button asChild variant="outline" className="w-full border-black">
                 <Link href="/resources/papers">Explore Hub</Link>
               </Button>
             </CardContent>
-          </Card>
+          </Card></CometCard>
 
           {/* Feature 2: Marketplace */}
+          <CometCard>
           <Card>
             <CardHeader>
               <div className="flex items-center gap-4">
@@ -82,13 +138,14 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button asChild variant="outline" className="w-full">
+              <Button asChild variant="outline" className="w-full border-black">
                 <Link href="/marketplace">Browse Services</Link>
               </Button>
             </CardContent>
-          </Card>
+          </Card></CometCard>
 
           {/* Feature 3: Notifications */}
+          <CometCard>
           <Card>
             <CardHeader>
               <div className="flex items-center gap-4">
@@ -101,11 +158,11 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button asChild variant="outline" className="w-full">
+              <Button asChild variant="outline" className="w-full border-black">
                 <Link href="/notifications">View Updates</Link>
               </Button>
             </CardContent>
-          </Card>
+          </Card></CometCard>
         </div>
       </section>
 
@@ -231,14 +288,30 @@ export default function Home() {
       </section>
 
       {/* --- CTA Section --- */}
+
       <section className="flex flex-col items-center rounded-lg bg-primary py-20 text-center text-primary-foreground">
-        <h2 className="text-3xl font-bold">Ready to Get Started?</h2>
-        <p className="mt-2 text-lg text-primary-foreground/80">
+      
+      <p className="text-neutral-600 dark:text-neutral-500 text-base  mb-10 text-white">
+        Ready to Get Started?
+      </p>
+      <TypewriterEffect words={words} />
+      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4 mt-10">
+        <button className="w-40 h-10 rounded-xl bg-black border dark:border-white border-transparent text-white text-sm">
+        <Link href="/auth/login">Login</Link>
+        </button>
+        <button className="w-40 h-10 rounded-xl bg-white text-black border border-black  text-sm">
+        <Link href="/auth/register">Sign Up for Free</Link>
+        </button>
+     
+    </div>
+     {/* <h2 className="text-3xl font-bold">Ready to Get Started?</h2> */}
+        {/* <p className="mt-2 text-lg text-primary-foreground/80">
           Create an account today to access all features.
-        </p> {/* <-- Fixed line! */}
-        <Button asChild variant="secondary" size="lg" className="mt-8">
+        </p>  */}
+        {/* <-- Fixed line! */}
+        {/* <Button asChild variant="secondary" size="lg" className="mt-8">
           <Link href="/auth/register">Sign Up for Free</Link>
-        </Button>
+        </Button> */}
       </section>
     </div>
   );
