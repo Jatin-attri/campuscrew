@@ -97,7 +97,7 @@ export default function LoginPage() {
               onClick={() => handleOAuthSignIn("linkedin")}
             >
               {/* Add LinkedIn icon here */}
-              Sign in with LinkedIn
+              Sign in with Github
             </Button>
           </div>
 

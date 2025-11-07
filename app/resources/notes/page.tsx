@@ -18,6 +18,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Download, Search, FileText, SlidersHorizontal, X } from "lucide-react"
+import { CometCard } from "@/components/ui/comet-card";
 
 // Import the new mock data
 import mockNotes from "@/app/data/mock-notes.json"
@@ -185,8 +186,9 @@ export default function NotesPage() {
 
 // --- Reusable Note Card Component (with effects) ---
 function NoteCard({ note }: { note: Note }) {
-  return (
-    <Card className="flex h-full flex-col overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1">
+  return (<CometCard>
+    <Card className="flex h-full flex-col overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 border-black">
+      
       <CardHeader className="flex flex-row items-start justify-between space-y-0">
         <div className="flex-1 space-y-1">
           <CardTitle className="text-lg">{note.title}</CardTitle>
@@ -225,7 +227,7 @@ function NoteCard({ note }: { note: Note }) {
           </Link>
         </Button>
       </CardFooter>
-    </Card>
+    </Card></CometCard>
   )
 }
 

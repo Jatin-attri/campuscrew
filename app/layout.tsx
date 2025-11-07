@@ -12,9 +12,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       
       <body>
-    
+    <SessionProvider>
         <Navbar />
-        <SessionProvider><main className="min-h-screen p-4">{children}</main></SessionProvider>
+        <main className="min-h-screen p-4">{children}</main></SessionProvider>
         
         <Footer />
       </body>

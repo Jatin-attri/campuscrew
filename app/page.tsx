@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -9,12 +10,11 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { WavyBackground } from "@/components/ui/wavy-background";
-import { DottedGlowBackground } from '@/components/ui/dotted-glow-background';
 import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
 import { TypewriterEffect } from '@/components/ui/typewriter-effect';
 import { CometCard } from "@/components/ui/comet-card";
-import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { ContainerTextFlip } from "@/components/ui/container-text-flip";
+
 // Import icons from lucide-react
 import {
   BookMarked,
@@ -29,35 +29,37 @@ import {
 } from 'lucide-react';
 
 export default function Home() {
+
+
   const words = [
     {
       text: "Create",
-      className: "text-pink-500 dark:text-pink-400",
+      className: "text-white",
     },
     {
       text: "an",
-      className: "text-yellow-500 dark:text-yellow-400",
+      className: "text-white",
     },
     {
       text: "account",
-      className: "text-purple-500 dark:text-purple-400",
+      className: "text-white",
     },
   
     {
       text: "today",
-      className: "text-red-500 dark:text-red-400",
+    className: "text-white",
     },
     {
       text: "to",
-      className: "text-orange-500 dark:text-orange-400",
+     className: "text-white",
     },
     {
       text: "access",
-      className: "text-indigo-500 dark:text-indigo-400",
+     className: "text-white",
     },
     {
       text: "all",
-      className: "text-green-500 dark:text-green-400",
+      className: "text-blue-500 dark:text-blue-500",
     },
     {
       text: "features.",

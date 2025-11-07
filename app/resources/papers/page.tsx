@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
+import { CometCard } from "@/components/ui/comet-card";
 import {
   FileText,
   Download,
@@ -175,10 +176,10 @@ export default function PapersPage() {
 
         {/* --- 2. Results Area (with Tabs) --- */}
         <main>
-          <Tabs defaultValue="unsolved" className="w-full">
+          <Tabs defaultValue="unsolved" className="w-full ">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="unsolved" className="py-3">
-                <FileText className="mr-2 h-5 w-5" />
+                <FileText className="mr-2 h-5 w-5 " />
                 Unsolved ({filteredUnsolved.length})
               </TabsTrigger>
               <TabsTrigger value="solved" className="py-3">
@@ -188,7 +189,7 @@ export default function PapersPage() {
             </TabsList>
 
             {/* --- Unsolved Papers Content --- */}
-            <TabsContent value="unsolved" className="mt-8">
+            <TabsContent value="unsolved" className="mt-8 ">
               {filteredUnsolved.length > 0 ? (
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {filteredUnsolved.map((paper) => (
@@ -222,8 +223,9 @@ export default function PapersPage() {
 // --- Reusable Paper Card Component (with effects) ---
 function PaperCard({ paper }: { paper: Paper }) {
   return (
+    <CometCard>
     <Card
-      className={`flex h-full flex-col overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1
+      className={`flex h-full flex-col overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:-translate-y-1 border-black
       ${
         paper.isSolved
           ? "relative ring-2 ring-primary/50" // "Premium" glow effect
@@ -273,7 +275,7 @@ function PaperCard({ paper }: { paper: Paper }) {
           </Button>
         )}
       </CardFooter>
-    </Card>
+    </Card></CometCard>
   )
 }
 

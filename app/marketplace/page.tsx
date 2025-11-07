@@ -19,6 +19,7 @@ import {
   ShieldCheck,
   Award,
 } from "lucide-react"
+import { CometCard } from "@/components/ui/comet-card";
 
 export default function MarketplacePage() {
   return (
@@ -44,6 +45,7 @@ export default function MarketplacePage() {
         </h2>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {/* Assignment Card */}
+          <CometCard>
           <Card className="flex flex-col justify-between transition-all hover:shadow-lg">
             <CardHeader className="flex-row items-center gap-4">
               <div className="rounded-lg bg-primary/10 p-4">
@@ -63,15 +65,16 @@ export default function MarketplacePage() {
               </p>
             </CardContent>
             <CardFooter>
-              <Button asChild variant="outline" className="w-full">
+              <Button asChild variant="outline" className="w-full border-black">
                 <Link href="/marketplace/new?service=assignment">
                   Request an Assignment
                 </Link>
               </Button>
             </CardFooter>
-          </Card>
+          </Card></CometCard>
 
           {/* Presentation Card */}
+          <CometCard>
           <Card className="flex flex-col justify-between transition-all hover:shadow-lg">
             <CardHeader className="flex-row items-center gap-4">
               <div className="rounded-lg bg-primary/10 p-4">
@@ -91,13 +94,13 @@ export default function MarketplacePage() {
               </p>
             </CardContent>
             <CardFooter>
-              <Button asChild variant="outline" className="w-full">
+              <Button asChild variant="outline" className="w-full border-black">
                 <Link href="/marketplace/new?service=presentation">
                   Request a PPT
                 </Link>
               </Button>
             </CardFooter>
-          </Card>
+          </Card></CometCard>
         </div>
       </section>
 

@@ -142,18 +142,26 @@ const getStatusVariant = (status: string) => {
   }
 }
 
+// IMPORTANT: This file relies on 'next-auth', 'next/navigation', and 'next/link'.
+// If you see errors like "Could not resolve", please ensure these packages
+// are installed in your project by running: npm install
 export default function DashboardPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
 
   // --- 1. Security & Loading State ---
-  if (status === "loading") {
-    return <DashboardLoadingSkeleton />
-  }
+  // if (status === "loading") {
+  //   return <DashboardLoadingSkeleton />
+  // }
 
+  // if (status === "unauthenticated") {
+  //   router.push("/login")
+  //   return null // Render nothing while redirecting
+  // }
+    if (status === "loading") return <p>Loading...</p>
   if (status === "unauthenticated") {
-    router.push("/login")
-    return null // Render nothing while redirecting
+    router.push("/auth/login")
+    return null
   }
 
   // --- 2. Main Dashboard Render ---
@@ -165,7 +173,7 @@ export default function DashboardPage() {
           Welcome back, {session?.user?.name?.split(" ")[0] || "Student"}!
         </h1>
         <p className="text-muted-foreground">
-          Here's your CampusCrew update for Tuesday, November 4, 2025.
+          Here's your CampusCrew update for Wednesday, November 5, 2025.
         </p>
       </div>
 
@@ -353,7 +361,7 @@ function DashboardLoadingSkeleton() {
           <Card>
             <CardHeader>
               <Skeleton className="h-6 w-1/4" />
-              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-4 w-1/K" />
             </CardHeader>
             <CardContent>
               <Skeleton className="h-48 w-full" />
